@@ -1,42 +1,43 @@
-onsole.log("welcome to spotify");
-//Initialize the variables
-let songIndex=0;
-let audioElement= new audio('song1.mp3');
-let masterPlay=document.getElementById('masterPlay');
-let myProgressBar=document.getElementById('myProgressBar');
-let gif=document.getElementById('gif');
-let songs=[
-    
-{songName:"Let me Love You", filepath:"D:\song1.mp3", coverpath:"C:\Users\preet\Downloads\images 1.jpg"},
-    
-]   
-//audioElement.play();
+let songIndex = 0;
+let audioElement = new Audio('assets/songs/song1.mp3'); 
+let masterPlay = document.getElementById('masterPlay');
+let masterPause = document.getElementById('masterPause');
+let myProgressBar = document.getElementById('myProgressBar');
+let gif = document.getElementById('gif');
 
-//Handle play/pause click
-masterPlay.addEventListener( 'click',()=>{
-if(audioElement.paused || audioElement.currentTime<=0){
-    audioElement.play();
-    masterPlay.classList.remove('fa-play-circle');
-    masterPlay.classList.add('fa-pause-circle');
-    gif.style.opacity=1;
+const songs = [
+    { songName: "Let me Love You", filepath: "assets/songs/song1.mp3", coverpath: "assets/images/image1.jpg" },
+    // Add more songs here...
+];
+
+function updatePlayPauseUI(isPlaying, isPause) {
+    if (isPlaying) {
+        masterPlay.style.display="none";
+        masterPause.style.display="inline";
+        gif.style.opacity = 1; 
+    } 
+    if(isPause) {
+        masterPause.style.display="none"; 
+        masterPlay.style.display="inline";
+        gif.style.opacity = 0; 
+    }
 }
 
-else{
-    audioElement.pause();
-    masterPlay.classList.remove('fa-pause-circle');
-    masterPlay.classList.add('fa-play-circle');
-    gif.style.opacity=0;
-}
-})
+masterPlay.addEventListener('click', () => {
+    if (audioElement.paused) {
+        audioElement.play(); 
+        updatePlayPauseUI(true); 
+    } else {
+        audioElement.pause(); 
+        updatePlayPauseUI(false); 
+    }
+});
 
-//Listen to Events
-myProgressBar.addEventListener('timeupdate',()=>{
-    console.log('timeupdate');
-    //update Seekbar
-    progress=parseInt((audio.Element.currentTime/audioElement.duration)* 100);
-   // console.log(progress);
-    myProgressBar.value=progress;
-})
-myProgressBar.addEventListener('change',()=>{
-    audioElement.current=myProgressBar.value*audioElement.duration/100;
-})
+audioElement.addEventListener('timeupdate', () => {
+    let progress = parseInt((audioElement.currentTime / audioElement.duration) * 100);
+    myProgressBar.value = progress;
+});
+
+myProgressBar.addEventListener('change', () => {
+    audioElement.currentTime = myProgressBar.value * audioElement.duration / 100;
+});
